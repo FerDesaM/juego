@@ -5,21 +5,21 @@
 #ifndef JUEGOC___CUADRADO_H
 #define JUEGOC___CUADRADO_H
 #include <SFML/Graphics.hpp>
-
+template<typename T>
 class Cuadrado {
 private:
     sf::RectangleShape shape;
-    sf::Vector2f position;
-    sf::Vector2f size;
+    sf::Vector2<T> position;
+    sf::Vector2<T> size;
 
 public:
     //Hacemos una comprobacion de que T es un tipo float
-    template<typename T>
-    Cuadrado(const sf::Vector2<T>& position, const sf::Vector2<T>& size) {
+
+    Cuadrado(const sf::Vector2<T>& position, const sf::Vector2<T>& size,const sf::Color&color) {
         static_assert(std::is_floating_point_v<T>,"no son del mismo tipo");
         shape.setPosition(position);
         shape.setSize(size);
-        shape.setFillColor(sf::Color::Green);
+        shape.setFillColor(color);
         this->position = position;
         this->size = size;
     }

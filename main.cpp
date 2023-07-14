@@ -4,11 +4,11 @@
 #include "projectile.h"
 #include <memory>
 using namespace sf;
-const int y=600;
-const int x=800;
+const int y=800;
+const int x=1000;
 int main(int argc , char * args[])
 {
-    Juego juego(x, y, "Prueba");
-    juego.GameLoop();
+    Juego *partida;
+    partida=new Juego(x, y, "Prueba");
     return 0;
 }
