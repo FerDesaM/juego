@@ -79,7 +79,7 @@ void Juego::actualizar_animacion(sf::Sprite& sprite)
 {
 
     IntRect ubicacion(0, 0, sprite.getTexture()->getSize().x / divisionsprite.x, sprite.getTexture()->getSize().y / divisionsprite.y);
-
+    sprite.setTextureRect(ubicacion);
 }
 void Juego::Cargar_recursos()
 {
@@ -94,8 +94,9 @@ void Juego::Cargar_recursos()
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
     sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
-    IntRect ubicacion(0,0,100,130);
-    sprite1->setTextureRect(ubicacion);
+
+
+    actualizar_animacion(*sprite1);
     mapa->setTexture(*texture2);
     mapa->setScale(1000.f/mapa->getTexture()->getSize().x,800.f/mapa->getTexture()->getSize().y);
 }
