@@ -33,7 +33,7 @@ public:
     void Evento();
     void Colisiones();
     void Cargar_recursos();
-    void setFrame();
+    void actualizar_animacion(Sprite&);
 };
 
 

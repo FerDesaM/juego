@@ -75,9 +75,10 @@ void Juego::Colisiones()
 
 
 }
-void actualizar_animacion(sf::Sprite& sprite)
+void Juego::actualizar_animacion(sf::Sprite& sprite)
 {
-    IntRect ubicacion(0,0,sprite.getTexture()->getSize().x/divisionsprite.x,sprite.getTexture()->getSize().y/divisionsprite.y);
+
+    IntRect ubicacion(0, 0, sprite.getTexture()->getSize().x / divisionsprite.x, sprite.getTexture()->getSize().y / divisionsprite.y);
 
 }
 void Juego::Cargar_recursos()
@@ -98,9 +99,6 @@ void Juego::Cargar_recursos()
     mapa->setTexture(*texture2);
     mapa->setScale(1000.f/mapa->getTexture()->getSize().x,800.f/mapa->getTexture()->getSize().y);
 }
-void Juego::setFrame()
-{
 
-}
 // Created by Fernando on 23/06/2023.
 //
