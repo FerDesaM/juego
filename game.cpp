@@ -4,14 +4,15 @@
 #include<memory>
 Juego::Juego(int ancho, int largo, const std::string& titulo) {
     int fps = 60;
+    gravity = sf::Vector2f(0.f, 9.8f); // Gravedad (puedes ajustarla según tus necesidades)
     ventana = new sf::RenderWindow(sf::VideoMode(ancho, largo), titulo);
     ventana->setFramerateLimit(fps);
     //projectile=new Projectile(10.f,50.f,9.8f);
     //projectile->setPosition(sf::Vector2f(100.f, 100.f)); // Posición inicial
-   // projectile->setWindowBounds(sf::Vector2f(ancho, largo));
-   divisionsprite.x=5;
+    // projectile->setWindowBounds(sf::Vector2f(ancho, largo));
+    divisionsprite.x=5;
     divisionsprite.y=4;
-   Cargar_recursos();
+    Cargar_recursos();
     evento= make_unique<Event>();
     GameLoop();
 }
@@ -28,6 +29,7 @@ void Juego::GameLoop() {
         Colisiones();
     }
 }
+
 void Juego::Dibujar() {
     ventana->clear(sf::Color::Blue);
     // projectile->draw(*ventana);
@@ -35,39 +37,28 @@ void Juego::Dibujar() {
     ventana->draw(*sprite1);
     ventana->draw(cuadrado->getShape());
     ventana->draw(cuadrado2->getShape());
+
+    //Dibujar Personaje
+    personaje1->Draw(*ventana,deltaTime,gravity);
+
     ventana->display();
 }
 void Juego::Evento()
 {
- while(ventana->pollEvent(*evento))
- {
-     switch (evento->type)
-     {
-         case Event::Closed:
-             ventana->close();
-             exit(1);
-             break;
-         case Event::KeyPressed:
-             if(Keyboard::isKeyPressed(Keyboard::Down))
-             {
-                 sprite1->setPosition(sprite1->getPosition().x,sprite1->getPosition().y+10);
-             }
-             else if(Keyboard::isKeyPressed(sf::Keyboard::Up))
-             {
-                 sprite1->setPosition(sprite1->getPosition().x,sprite1->getPosition().y-10);
-             }
-             else if(Keyboard::isKeyPressed(sf::Keyboard::Right))
-             {
-                 sprite1->setPosition(sprite1->getPosition().x+10,sprite1->getPosition().y);
-             }
-             else if(Keyboard::isKeyPressed(sf::Keyboard::Left))
-             {
-                 sprite1->setPosition(sprite1->getPosition().x-10,sprite1->getPosition().y);
-             }
-             break;
-     }
+    while(ventana->pollEvent(*evento))
+    {
+        switch (evento->type)
+        {
+            case Event::Closed:
+                ventana->close();
+                exit(1);
+                break;
+            case Event::KeyPressed:
+                personaje1->ResponderEvento(*evento); //Responder evento de Personaje1
+                break;
+        }
 
- }
+    }
 }
 void Juego::Colisiones()
 {
@@ -94,6 +85,10 @@ void Juego::Cargar_recursos()
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
     sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
+
+    //Crear personaje 1
+    personaje1 = std::make_unique<Personaje>(sf::Vector2f(100.f, 200.f), 50.f, 50.f, sf::Color::Red);
+    personaje1->RefreshAnimacion();
 
 
     actualizar_animacion(*sprite1);
