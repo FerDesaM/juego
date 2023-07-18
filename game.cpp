@@ -89,8 +89,8 @@ void Juego::Cargar_recursos()
     texture2= std::make_unique<sf::Texture>();
     sprite1=std::make_unique<sf::Sprite>();
     mapa=std::make_unique<sf::Sprite>();
-    texture1->loadFromFile("imagenes/mariobros.png");
-    texture2->loadFromFile("imagenes/mapa.jpg");
+    texture1->loadFromFile("../images/mariobros.png");
+    texture2->loadFromFile("../images/mapa.jpg");
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
     sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
