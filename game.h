@@ -29,9 +29,11 @@ private:
     std::unique_ptr<Cuadrado<float>> cuadrado2;
     std::unique_ptr<Event> evento;
     sf::Vector2i divisionsprite;
-
+    sf::Vector2f limiteMundo;
+    std::unique_ptr<FabricaPersonaje> fabrica;
     //Personaje de juego
     std::unique_ptr<Personaje> personaje1;
+    std::unique_ptr<Personaje> prota1;
     //Aceleracion de gravedad
     sf::Vector2f gravity; // Gravedad (puedes ajustarla según tus necesidades)
     const float deltaTime = 10.f / 60.f; // Delta de tiempo para cálculos de movimiento (60 FPS)
@@ -42,7 +44,8 @@ public:
     void Evento();
     void Colisiones();
     void Cargar_recursos();
-    void actualizar_animacion(Sprite&);
+    void crear_jugadores();
+    void moverCamara();
 };
 
 
