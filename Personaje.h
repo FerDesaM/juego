@@ -7,6 +7,7 @@
 
 #include "Proyectil.h"
 #include <vector>
+
 //Utilizar el abstract factory para crear distintos tipos de personajes
 class Personaje {
 private:
@@ -14,8 +15,14 @@ private:
     float width; //Ancho del personaje
     float height; //Alto del personaje
     float movementSpeed; //Velocidad de movimiento del personaje
+    //Angulo de disparo
+    float anguloDisparo;
+    sf::Vector2f vectorDireccionDisparo;
+
     sf::Texture *textura1; //Textura para sprite del personaje
+    sf::Texture *texturaFlecha; //Textura para sprite del personaje
     sf::Sprite *sprite1; //Sprite del personaje
+    sf::Sprite *spriteFlecha; //Sprite de la flecha apuntadora
     sf::Vector2i divisionsprite; //Division de texturas para sprite
     sf::RectangleShape rectangle;
     std::vector<Proyectil> proyectiles2;
@@ -23,9 +30,14 @@ private:
     float deltaTime;
     float tiempoAcumulado;
     sf::Clock frameClock;
+
+
+
+    //Prueba Ciruclo
+    sf::CircleShape *circulo;
 public:
     Personaje(sf::Vector2f position, float width, float height, sf::Color color); //Constructor
-    void Disparar(std::vector<Proyectil>& projectiles, sf::Vector2f direction, sf::Vector2f velocidadInicial);
+    void Disparar(std::vector<Proyectil>& projectiles, sf::Vector2f velocidadInicial);
     void RefreshAnimacion();
     //void moverCamara(sf::RenderWindow & window,sf::Vector2f limiteMundo);
     void Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f aceleracion);
@@ -37,6 +49,7 @@ public:
     void moveDown();
     void moveLeft();
     void moveRight();
+    void ActualizarPosicion();
 };
 class FabricaPersonaje{
 public:

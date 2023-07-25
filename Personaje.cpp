@@ -4,29 +4,62 @@
 
 #include <SFML/Graphics.hpp>
 #include "Personaje.h"
+#include "VectorUtil.h"
+#include <cmath>
+#include <iostream>
+
 //Implementacion de Constructor
 Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color color)
         : position(position), width(width), height(height), movementSpeed(5.f) {
-    //Establecer textura y sprite
+    //Establecer angulo Inicial
+
+    vectorDireccionDisparo = sf::Vector2f(1.0,-1.0);
+    //vectorDireccionDisparo = VectorUtil::normalizarVector(vectorDireccionDisparo);
+    anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
+    //std::cout<<anguloDisparo<<std::endl;
+
+    //Establecer texturas y sprites del Personaje
     textura1 = new sf::Texture;
-    textura1->loadFromFile("../images/megaman.png");
+    textura1->loadFromFile("../images/cocodrilo.png");
     //Division de la imagen
-    divisionsprite.x=5;
+    divisionsprite.x=4;
     divisionsprite.y=2;
     frame_actual.x=0;
     frame_actual.y=0;
     //Creacion del sprite
     sprite1 = new sf::Sprite;
     sprite1->setTexture(*textura1);
+    //Calcular ancho y alto de un frame
+    float anchoFrame = textura1->getSize().x / divisionsprite.x;
+    float altoFrame = textura1->getSize().y / divisionsprite.y;
+    //Redefinir centro de coordenads del personaje
+    sprite1->setOrigin(anchoFrame/2,altoFrame/2);
     //Scalar sprite para ajustar al ancho y alto establecidos
-    //sprite1->scale(width/sprite1->getTexture()->getSize().x,height/sprite1->getTexture()->getSize().y);
+    sprite1->scale(width/anchoFrame,height/altoFrame);
+
     //Colocar sprite en posicion inicial
     sprite1->setPosition(position);
 
-    /*
-    rectangle.setSize(sf::Vector2f(width, height));
-    rectangle.setPosition(position);
-    rectangle.setFillColor(color);*/
+
+    //Sprite de flecha apuntadora
+    texturaFlecha = new sf::Texture;
+    texturaFlecha->loadFromFile("../images/canion.png");
+    spriteFlecha = new sf::Sprite;
+    spriteFlecha->setTexture(*texturaFlecha);
+    //Redefinir centro de coordenads de la flecha
+    spriteFlecha->setOrigin(0.0,spriteFlecha->getTexture()->getSize().y/2);
+    //Scalar sprite para ajustar al ancho y alto establecidos
+    spriteFlecha->scale(100.0/spriteFlecha->getTexture()->getSize().x,100.0/spriteFlecha->getTexture()->getSize().y);
+    spriteFlecha->setPosition(position);
+    spriteFlecha->setRotation(anguloDisparo);
+
+/*
+    //Circulo de Pruebas de ubicacion Personaje
+    circulo = new sf::CircleShape(20.0);
+    circulo->setOrigin(20.0,20.0);
+    circulo->setPosition(position);
+    circulo->setFillColor(sf::Color(255,255,0,255));*/
+
 }
 
 void Personaje::RefreshAnimacion()
@@ -41,9 +74,9 @@ void Personaje::setTexture(sf::Texture *texture) {
     sprite1->setTexture(*texture);
 
 }
-void Personaje::Disparar(std::vector<Proyectil> &projectiles, sf::Vector2f direction, sf::Vector2f velocidadInicial) {
+void Personaje::Disparar(std::vector<Proyectil> &projectiles, sf::Vector2f velocidadInicial) {
     //Posicion de lazamiento de la bala
-    sf::Vector2f r0(position.x + width, position.y + height / 2.f);
+    sf::Vector2f r0(position.x, position.y);
     //Geometria del proyectil
     Proyectil bala(r0,velocidadInicial);
     projectiles.push_back(bala);
@@ -74,15 +107,22 @@ sf::Vector2f Personaje::getPosition() const {
     return position;
 }
 void Personaje::Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f aceleracion) {
-    window.draw(*sprite1);
-    //window.draw(rectangle);
-
-    //
+    //Dibujo de proyectiles lanzados por el personaje
     for (auto& bala : proyectiles2) {
         bala.AplicarAceleracion(deltaTime,aceleracion);
         bala.Draw(window);
-
     }
+
+    //Dibujo del Sprite del personaje
+    window.draw(*sprite1);
+
+    //Dubujo circulo Ubicacion ( borrar)
+    //window.draw(*circulo);
+
+    //Dibujo de flecha de angulo
+    window.draw(*spriteFlecha);
+
+
 }
 
 void Personaje::ResponderEvento(sf::Event event,float deltaTime){
@@ -96,52 +136,75 @@ void Personaje::ResponderEvento(sf::Event event,float deltaTime){
     else if (event.key.code == sf::Keyboard::Right)
         this->moveRight();
     else if (event.key.code == sf::Keyboard::Space){
-        sf::Vector2f direction(1.f, 1.f); // Dirección del proyectil (puedes ajustarla)
-        sf::Vector2f v0(50.f, -50.f); // Velocidad inicial del proyectil
-        this->Disparar(proyectiles2, direction, v0);
+        //Definir Fuerza de lanzamiento
+        float fuerzaLanzamiento = 50.f;
+        sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
+        this->Disparar(proyectiles2, v0);
     }
 }
 
 void Personaje::moveUp() {
-    position.y -= movementSpeed;
-    sprite1->setPosition(position);
-    frame_actual.x++;
-
-    // Set the frame row for the "up" animation (adjust this if needed)
-
+    float incremento = -1;
+    if(frame_actual.y == 1)
+        incremento *=-1;
+    //Incrementar 1 grado la direccion de disparo
+    VectorUtil::incrementarAnguloAVector(vectorDireccionDisparo,incremento);
+    //anguloDisparo -= 1.0;
+    ActualizarPosicion();
 }
 
 void Personaje::moveDown() {
-    position.y += movementSpeed;
-    sprite1->setPosition(position);
-    frame_actual.y++;
-
+    float incremento = 1;
+    if(frame_actual.y == 1)
+        incremento *=-1;
+    VectorUtil::incrementarAnguloAVector(vectorDireccionDisparo,incremento);
+    //anguloDisparo += 1.0;
+    ActualizarPosicion();
 }
 
 void Personaje::moveLeft() {
-    position.x -= movementSpeed;
-    sprite1->setPosition(position);
-
+    if (frame_actual.y != 1){
+        frame_actual.y = 1;
+        vectorDireccionDisparo = VectorUtil::reflejarVector(vectorDireccionDisparo,sf::Vector2f(0,1));
+    }
+    else{
+        frame_actual.x++;
+        if (frame_actual.x == divisionsprite.x){
+            frame_actual.x =0;
+        }
+        position.x -= movementSpeed;
+    }
+    ActualizarPosicion();
+    RefreshAnimacion();
 }
 
 void Personaje::moveRight() {
-    if (frame_actual.x < divisionsprite.x - 1) {
-        frame_actual.x++;
-    } else {
-        // Si se alcanzó la última columna de la primera fila, avanzar a la primera columna de la segunda fila
-        frame_actual.x = 0;
-        frame_actual.y = (frame_actual.y == 0) ? 1 : 0; // Cambiar entre las dos filas
+    if (frame_actual.y != 0){
+        frame_actual.y = 0;
+        vectorDireccionDisparo = VectorUtil::reflejarVector(vectorDireccionDisparo,sf::Vector2f(0,1));
     }
-
-    // Mover el personaje con cada incremento en el índice de la columna actual
-    position.x += movementSpeed * (frame_actual.x + 1);
-    sprite1->setPosition(position);
+    else{
+        frame_actual.x++;
+        if (frame_actual.x == divisionsprite.x){
+            frame_actual.x =0;
+        }
+        position.x += movementSpeed;
+    }
+    ActualizarPosicion();
     RefreshAnimacion();
 }
+
+void Personaje::ActualizarPosicion(){
+    sprite1->setPosition(position);
+    spriteFlecha->setPosition(position);
+    anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
+    spriteFlecha->setRotation(anguloDisparo);
+}
+
 Personaje *Prota::crearPersonaje(sf::Vector2f position, const sf::Color &color) {
     Text=new sf::Texture;
     Text->loadFromFile("../images/mariobros.png");
-    Personaje* personaje1=new Personaje(position,100.f,100.f,color);
+    Personaje* personaje1=new Personaje(position,500.f,500.f,color);
     personaje1->setTexture(Text);
     return personaje1;
 }

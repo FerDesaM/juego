@@ -118,10 +118,10 @@ void Juego::Cargar_recursos()
     texture2->loadFromFile("../images/mapa.jpg");
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
-    sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
+    //sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
 
-    //Crear personaje 1
-    personaje1 = std::make_unique<Personaje>(sf::Vector2f(100.f, 200.f), 50.f, 50.f, sf::Color::Red);
+    //Crear personaje 1//////////////////////////////
+    personaje1 = std::make_unique<Personaje>(sf::Vector2f(0.f, 300.f), 300.f, 300.f, sf::Color::Red);
     personaje1->RefreshAnimacion();
     crear_jugadores();
     mapa->setTexture(*texture2);
