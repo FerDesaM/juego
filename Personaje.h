@@ -7,6 +7,7 @@
 
 #include "Proyectil.h"
 #include <vector>
+#include "Plataforma.h"
 
 //Utilizar el abstract factory para crear distintos tipos de personajes
 class Personaje {
@@ -15,6 +16,8 @@ private:
     float width; //Ancho del personaje
     float height; //Alto del personaje
     float movementSpeed; //Velocidad de movimiento del personaje
+    bool estaSobrePlataforma;
+
     //Angulo de disparo
     float anguloDisparo;
     sf::Vector2f vectorDireccionDisparo;
@@ -31,16 +34,15 @@ private:
     float tiempoAcumulado;
     sf::Clock frameClock;
 
-
-
     //Prueba Ciruclo
     sf::CircleShape *circulo;
+
 public:
     Personaje(sf::Vector2f position, float width, float height, sf::Color color); //Constructor
     void Disparar(std::vector<Proyectil>& projectiles, sf::Vector2f velocidadInicial);
     void RefreshAnimacion();
     //void moverCamara(sf::RenderWindow & window,sf::Vector2f limiteMundo);
-    void Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f aceleracion);
+    void Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f aceleracion,std::vector<Plataforma> plataformas);
     void setTexture(sf::Texture * texture);
     sf::Vector2f getPosition() const;
     //Movimiento Personaje
@@ -50,6 +52,7 @@ public:
     void moveLeft();
     void moveRight();
     void ActualizarPosicion();
+    void AplicarGravedad(float deltaTime, sf::Vector2f gravedad,std::vector<Plataforma> plataformas);
 };
 class FabricaPersonaje{
 public:

@@ -6,11 +6,14 @@
 #define JUEGOC___GAME_H
 #include <SFML/Graphics.hpp>
 #include<iostream>
+#include <vector>
 #include<memory>
 #include "projectile.h"
 #include "cuadrado.h"
 #include "Personaje.h"
+#include "Plataforma.h"
 #include "Proyectil.h"
+#include "ExplosionProyectil.h"
 #include "RealGame.h"
 #include "Menu.h"
 using namespace std;
@@ -36,6 +39,8 @@ private:
     std::unique_ptr<Personaje> prota1;
     std::unique_ptr<Menu> menu;
     std::unique_ptr<RealGame> game;
+    //Plataforma de juego
+    std::vector<Plataforma> plataformas;
     bool juegoRealInicializado;
     //Aceleracion de gravedad
     sf::Vector2f gravity; // Gravedad (puedes ajustarla según tus necesidades)

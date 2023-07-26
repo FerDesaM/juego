@@ -44,8 +44,8 @@ void RealGame::Dibujar() {
     ///ventana.draw(cuadrado->getShape());
     //ventana.draw(cuadrado2->getShape());
     //Dibujar Personaje
-    personaje1->Draw(ventana,deltaTime,gravity);
-    prota1->Draw(ventana, deltaTime, gravity);
+    //personaje1->Draw(ventana,deltaTime,gravity);
+    //prota1->Draw(ventana, deltaTime, gravity);
     ventana.display();}
 void RealGame:: Inicializar(){
 

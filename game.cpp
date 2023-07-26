@@ -5,12 +5,10 @@
 #include<memory>
 Juego::Juego(int ancho, int largo, const std::string& titulo) {
     int fps = 60;
-    gravity = sf::Vector2f(0.f, 9.8f); // Gravedad (puedes ajustarla según tus necesidades)
+    gravity = sf::Vector2f(-5.f, 9.8f); // Gravedad (puedes ajustarla según tus necesidades)
     ventana = new sf::RenderWindow(sf::VideoMode(ancho, largo), titulo);
     ventana->setFramerateLimit(fps);
-    //projectile=new Projectile(10.f,50.f,9.8f);
-    //projectile->setPosition(sf::Vector2f(100.f, 100.f)); // Posición inicial
-    // projectile->setWindowBounds(sf::Vector2f(ancho, largo));
+
     limiteMundo=sf::Vector2f(ancho*4,largo*2);
     divisionsprite.x=5;
     divisionsprite.y=4;
@@ -85,9 +83,15 @@ void Juego::Dibujar() {
     ventana->draw(*sprite1);
     ventana->draw(cuadrado->getShape());
     ventana->draw(cuadrado2->getShape());
+    //Dibujar Plataformas
+    for (auto& plataforma : plataformas) {
+        plataforma.Draw(*ventana);
+    }
     //Dibujar Personaje
-    personaje1->Draw(*ventana,deltaTime,gravity);
-    prota1->Draw(*ventana, deltaTime, gravity);
+    personaje1->Draw(*ventana,deltaTime,gravity,plataformas);
+    //prota1->Draw(*ventana, deltaTime, gravity,plataformas);
+    //proy.Draw(window);
+
     ventana->display();
 }
 void Juego::Evento()
@@ -132,14 +136,19 @@ void Juego::Cargar_recursos()
     texture2= std::make_unique<sf::Texture>();
     sprite1=std::make_unique<sf::Sprite>();
     mapa=std::make_unique<sf::Sprite>();
-    //texture1->loadFromFile("../images/mariobros.png");
+
     texture2->loadFromFile("../images/mapa.jpg");
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
     //sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
 
+
+    //Cargar Plataformas
+    Plataforma plata(sf::Vector2f(500.f, 500.f), 900.f, 200.f);
+    plataformas.push_back(plata);
     //Crear personaje 1//////////////////////////////
     personaje1 = std::make_unique<Personaje>(sf::Vector2f(0.f, 300.f), 300.f, 300.f, sf::Color::Red);
+    personaje1->AplicarGravedad(deltaTime,gravity,plataformas);
     personaje1->RefreshAnimacion();
     crear_jugadores();
     mapa->setTexture(*texture2);

@@ -9,22 +9,18 @@
 
 //Implementacion de Constructor
 Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color color)
-        : position(position), width(width), height(height), movementSpeed(5.f) {
-    //Establecer angulo Inicial
-
+        : position(position), width(width), height(height), movementSpeed(5.f),
+        estaSobrePlataforma(false) {
+    //Establecer direccion disparo inicial
     vectorDireccionDisparo = sf::Vector2f(1.0,-1.0);
-    //vectorDireccionDisparo = VectorUtil::normalizarVector(vectorDireccionDisparo);
     anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
-    //std::cout<<anguloDisparo<<std::endl;
 
     //Establecer texturas y sprites del Personaje
     textura1 = new sf::Texture;
     textura1->loadFromFile("../images/cocodrilo.png");
     //Division de la imagen
-    divisionsprite.x=4;
-    divisionsprite.y=2;
-    frame_actual.x=0;
-    frame_actual.y=0;
+    divisionsprite = sf::Vector2i (4,2);
+    frame_actual = sf::Vector2i (0,0);
     //Creacion del sprite
     sprite1 = new sf::Sprite;
     sprite1->setTexture(*textura1);
@@ -51,14 +47,6 @@ Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color
     spriteFlecha->scale(100.0/spriteFlecha->getTexture()->getSize().x,100.0/spriteFlecha->getTexture()->getSize().y);
     spriteFlecha->setPosition(position);
     spriteFlecha->setRotation(anguloDisparo);
-
-/*
-    //Circulo de Pruebas de ubicacion Personaje
-    circulo = new sf::CircleShape(20.0);
-    circulo->setOrigin(20.0,20.0);
-    circulo->setPosition(position);
-    circulo->setFillColor(sf::Color(255,255,0,255));*/
-
 }
 
 void Personaje::RefreshAnimacion()
@@ -69,59 +57,35 @@ void Personaje::RefreshAnimacion()
                            sprite1->getTexture()->getSize().y / divisionsprite.y);
     sprite1->setTextureRect(rectangulo);
 }
+
 void Personaje::setTexture(sf::Texture *texture) {
     sprite1->setTexture(*texture);
-
 }
+
 void Personaje::Disparar(std::vector<Proyectil> &projectiles, sf::Vector2f velocidadInicial) {
     //Posicion de lazamiento de la bala
     sf::Vector2f r0(position.x, position.y);
     //Geometria del proyectil
     Proyectil bala(r0,velocidadInicial);
     projectiles.push_back(bala);
-}/*
-void Personaje::moverCamara(sf::RenderWindow &window,sf::Vector2f limiteMundo) {
-    sf::Vector2f camaraPosition = position - sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2);
+}
 
-    // Asegurarse de que la cámara no salga de los límites del mundo
-    if (camaraPosition.x < 0) {
-        camaraPosition.x = 0;
-    }
-    if (camaraPosition.y < 0) {
-        camaraPosition.y = 0;
-    }
-    if (camaraPosition.x > limiteMundo.x - window.getSize().x) {
-        camaraPosition.x = limiteMundo.x - window.getSize().x;
-    }
-    if (camaraPosition.y > limiteMundo.y - window.getSize().y) {
-        camaraPosition.y = limiteMundo.y - window.getSize().y;
-    }
-
-    // Establecer la vista de la cámara en la ventana
-    sf::View camaraView(sf::FloatRect(0.f, 0.f, window.getSize().x, window.getSize().y));
-    camaraView.setCenter(camaraPosition);
-    window.setView(camaraView);
-}*/
 sf::Vector2f Personaje::getPosition() const {
     return position;
 }
-void Personaje::Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f aceleracion) {
+
+void Personaje::Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f aceleracion,std::vector<Plataforma> plataformas) {
     //Dibujo de proyectiles lanzados por el personaje
     for (auto& bala : proyectiles2) {
-        bala.AplicarAceleracion(deltaTime,aceleracion);
+        bala.AplicarAceleracion(deltaTime,aceleracion,plataformas);
         bala.Draw(window);
     }
 
     //Dibujo del Sprite del personaje
     window.draw(*sprite1);
 
-    //Dubujo circulo Ubicacion ( borrar)
-    //window.draw(*circulo);
-
     //Dibujo de flecha de angulo
     window.draw(*spriteFlecha);
-
-
 }
 
 void Personaje::ResponderEvento(sf::Event event,float deltaTime){
@@ -136,7 +100,7 @@ void Personaje::ResponderEvento(sf::Event event,float deltaTime){
         this->moveRight();
     else if (event.key.code == sf::Keyboard::Space){
         //Definir Fuerza de lanzamiento
-        float fuerzaLanzamiento = 50.f;
+        float fuerzaLanzamiento = 50.f; //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
         sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
         this->Disparar(proyectiles2, v0);
     }
@@ -157,7 +121,6 @@ void Personaje::moveDown() {
     if(frame_actual.y == 1)
         incremento *=-1;
     VectorUtil::incrementarAnguloAVector(vectorDireccionDisparo,incremento);
-    //anguloDisparo += 1.0;
     ActualizarPosicion();
 }
 
@@ -198,6 +161,21 @@ void Personaje::ActualizarPosicion(){
     spriteFlecha->setPosition(position);
     anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
     spriteFlecha->setRotation(anguloDisparo);
+}
+
+void Personaje::AplicarGravedad(float deltaTime, sf::Vector2f gravedad,
+                                std::vector<Plataforma> plataformas) {
+    for (auto& plataforma : plataformas) {
+        sf::FloatRect contornoPlataforma = plataforma.obtenerBound();
+        if (contornoPlataforma.intersects(sprite1->getGlobalBounds())){
+            estaSobrePlataforma = true;
+            break;
+        }
+    }
+    if (!estaSobrePlataforma){
+        //Actualizar posiciones de los proyectiles
+        position += gravedad * deltaTime * deltaTime; // Actualiza la posición
+    }
 }
 
 Personaje *Prota::crearPersonaje(sf::Vector2f position, const sf::Color &color) {
