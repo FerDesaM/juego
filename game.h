@@ -9,10 +9,10 @@
 #include<memory>
 #include "projectile.h"
 #include "cuadrado.h"
-
 #include "Personaje.h"
 #include "Proyectil.h"
-
+#include "RealGame.h"
+#include "Menu.h"
 using namespace std;
 using namespace sf;
 
@@ -34,6 +34,9 @@ private:
     //Personaje de juego
     std::unique_ptr<Personaje> personaje1;
     std::unique_ptr<Personaje> prota1;
+    std::unique_ptr<Menu> menu;
+    std::unique_ptr<RealGame> game;
+    bool juegoRealInicializado;
     //Aceleracion de gravedad
     sf::Vector2f gravity; // Gravedad (puedes ajustarla según tus necesidades)
     const float deltaTime = 10.f / 60.f; // Delta de tiempo para cálculos de movimiento (60 FPS)
@@ -46,6 +49,11 @@ public:
     void Cargar_recursos();
     void crear_jugadores();
     void moverCamara();
+    enum class EstadoJuego {
+        Menu,
+        RealGame
+    };
+    EstadoJuego estadoJuego;
 };
 
 

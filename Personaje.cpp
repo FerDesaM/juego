@@ -1,7 +1,6 @@
 //
 // Created by EQUIPO on 17/07/2023.
 //
-
 #include <SFML/Graphics.hpp>
 #include "Personaje.h"
 #include "VectorUtil.h"

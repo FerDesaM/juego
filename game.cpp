@@ -1,6 +1,7 @@
 #include "game.h"
 #include "cuadrado.h"
 #include <type_traits>
+#include "Menu.h"
 #include<memory>
 Juego::Juego(int ancho, int largo, const std::string& titulo) {
     int fps = 60;
@@ -19,18 +20,35 @@ Juego::Juego(int ancho, int largo, const std::string& titulo) {
 }
 
 void Juego::GameLoop() {
+    juegoRealInicializado = false;
+    menu= make_unique<Menu>(*ventana);
+    game= make_unique<RealGame>(*ventana);
     sf::Clock clock;
     sf::Time previousTime = clock.getElapsedTime();
     bool isProjectileMoving = false;
     sf::View camaraView;
-    camaraView.setSize(sf::Vector2f(ventana->getSize().x, ventana->getSize().y));
+    //camaraView.setSize(sf::Vector2f(ventana->getSize().x, ventana->getSize().y));
     ventana->setView(camaraView);
     while (ventana->isOpen())
     {
-        Evento();
-        moverCamara();
-        Dibujar();
-        Colisiones();
+        if(estadoJuego==EstadoJuego::Menu){
+        menu->Cargar_recursos();
+        menu->ProcesarEventos();
+        menu->DibujarMenu();
+    if (menu->seleccionaropcion()){
+            estadoJuego=EstadoJuego::RealGame;
+
+        if(!juegoRealInicializado) {
+            game->Inicializar();
+            juegoRealInicializado = true;
+        } }}
+        else if(estadoJuego==EstadoJuego::RealGame){
+
+            Evento();
+            moverCamara();
+            Dibujar();
+            //Colisiones();
+        }
     }
 }
 void Juego::moverCamara() {
