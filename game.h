@@ -5,6 +5,7 @@
 #ifndef JUEGOC___GAME_H
 #define JUEGOC___GAME_H
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include<iostream>
 #include <vector>
 #include<memory>
@@ -22,7 +23,7 @@ using namespace sf;
 class Juego {
 private:
     //Se hace uso del puntero unico para la liberacion de memoria
-    sf::RenderWindow* ventana;
+    std::unique_ptr<sf::RenderWindow> ventana;
     std::unique_ptr<Projectile> projectile;
     std::unique_ptr<sf::Texture> texture1;
     std::unique_ptr<Sprite> sprite1;
@@ -42,6 +43,9 @@ private:
     //Plataforma de juego
     std::vector<Plataforma> plataformas;
     bool juegoRealInicializado;
+    std::vector<std::unique_ptr<Personaje>> personajes;
+    std::unique_ptr<sf::Sound> sonido;
+    std::unique_ptr<sf::SoundBuffer> buffer;
     //Aceleracion de gravedad
     sf::Vector2f gravity; // Gravedad (puedes ajustarla según tus necesidades)
     const float deltaTime = 10.f / 60.f; // Delta de tiempo para cálculos de movimiento (60 FPS)

@@ -165,23 +165,47 @@ void Personaje::ActualizarPosicion(){
 
 void Personaje::AplicarGravedad(float deltaTime, sf::Vector2f gravedad,
                                 std::vector<Plataforma> plataformas) {
+    // Aplicar la gravedad a la velocidad actual del personaje
+    sf::Vector2f velocidad = gravedad * deltaTime;
+    // Actualizar la posición del personaje con la nueva velocidad
+    position += velocidad;
+
+    // Guardar el estado anterior de estar sobre una plataforma
+    bool estabaSobrePlataformaPrevio = estaSobrePlataforma;
+
+    // Comprobar si el personaje está sobre una plataforma
+    estaSobrePlataforma = false;
     for (auto& plataforma : plataformas) {
         sf::FloatRect contornoPlataforma = plataforma.obtenerBound();
-        if (contornoPlataforma.intersects(sprite1->getGlobalBounds())){
+        if (contornoPlataforma.intersects(sprite1->getGlobalBounds())) {
             estaSobrePlataforma = true;
             break;
         }
     }
-    if (!estaSobrePlataforma){
-        //Actualizar posiciones de los proyectiles
-        position += gravedad * deltaTime * deltaTime; // Actualiza la posición
+
+    // Si el personaje está sobre una plataforma, detener su caída y posicionarlo en la plataforma
+    if (estaSobrePlataforma) {
+        // Obtener la posición del personaje
+        sf::Vector2f personajePosition = plataformas[0].getPosition();
+
+        // Colocar al personaje encima de la plataforma
+        position.y = personajePosition.y - height / 2;
+    }
+
+    // Actualizar la posición del sprite del personaje
+    sprite1->setPosition(position);
+
+    // Si estaba sobre una plataforma y ahora no lo está, actualizar la animación para que mire hacia abajo
+    if (estabaSobrePlataformaPrevio && !estaSobrePlataforma) {
+        frame_actual.y = 1;
+        RefreshAnimacion();
     }
 }
 
 Personaje *Prota::crearPersonaje(sf::Vector2f position, const sf::Color &color) {
     Text=new sf::Texture;
-    Text->loadFromFile("../images/mariobros.png");
-    Personaje* personaje1=new Personaje(position,500.f,500.f,color);
+    Text->loadFromFile("../images/gatopsicopata.png");
+    Personaje* personaje1=new Personaje(position,100.f,200.f,color);
     personaje1->setTexture(Text);
     return personaje1;
 }

@@ -5,7 +5,7 @@
 #include "Plataforma.h"
 //Implementacion de Constructor
 Plataforma::Plataforma(sf::Vector2f position, float width, float height)
-        : position(position), width(width), height(height){
+        : position(position), width(width), height(height) {
     //Establecer texturas y sprites de la plataforma
     textura = new sf::Texture;
     textura->loadFromFile("../images/plataformaPrueba.png");
@@ -16,12 +16,12 @@ Plataforma::Plataforma(sf::Vector2f position, float width, float height)
     float anchoFrame = textura->getSize().x;
     float altoFrame = textura->getSize().y;
 
-    //Redefinir centro de coordenads del personaje
-    sprite->setOrigin(anchoFrame/2,altoFrame/2);
-    //Scalar plataforma para ajustar al ancho y alto establecidos
-    sprite->scale(width/anchoFrame,height/altoFrame);
+    //Redefinir centro de coordenadas del sprite
+    sprite->setOrigin(anchoFrame / 2, altoFrame / 2);
+    //Escalar sprite para ajustar al ancho y alto establecidos
+    sprite->setScale(width / anchoFrame, height / altoFrame);
 
-    //Colocar sprite en posicion inicial
+    //Colocar sprite en posición inicial
     sprite->setPosition(position);
 }
 
@@ -30,6 +30,7 @@ void Plataforma::Draw(sf::RenderWindow& window) {
     window.draw(*sprite);
 }
 
-sf::FloatRect Plataforma::obtenerBound(){
+sf::FloatRect Plataforma::obtenerBound() {
+    // Devolver el rectángulo delimitador del sprite de la plataforma
     return sprite->getGlobalBounds();
 }

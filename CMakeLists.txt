@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.23)
-project(JuegoFinal)
+project(juegogithub)
 
 set(CMAKE_CXX_STANDARD 17)
-add_executable(JuegoFinal main.cpp game.h game.cpp projectile.cpp projectile.h cuadrado.h Personaje.h Personaje.cpp
+add_executable(juegogithub main.cpp game.h game.cpp projectile.cpp projectile.h cuadrado.h Personaje.h Personaje.cpp
         Proyectil.cpp Proyectil.h Menu.h Menu.cpp RealGame.h RealGame.cpp VectorUtil.cpp VectorUtil.h Plataforma.cpp Plataforma.h ExplosionProyectil.cpp ExplosionProyectil.h)
 find_package(SFML 2.5.1 REQUIRED COMPONENTS graphics audio window network system)
 
 add_definitions(-DSDL_MAIN_HANDLED)
 
-target_link_libraries(JuegoFinal
+target_link_libraries(juegogithub
         sfml-graphics
         sfml-window
         sfml-audio

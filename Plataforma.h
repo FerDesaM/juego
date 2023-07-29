@@ -14,6 +14,9 @@ private:
     sf::Texture *textura; //Textura para la plataforma
     sf::Sprite *sprite; //Sprite de la plataforma
 public:
+    sf::Vector2f getPosition() const {
+        return position;
+    }
     Plataforma(sf::Vector2f position, float width, float height); //Constructor de plataforma
     void Draw(sf::RenderWindow& window);
     sf::FloatRect obtenerBound();

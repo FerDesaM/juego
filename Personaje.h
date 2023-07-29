@@ -53,6 +53,7 @@ public:
     void moveRight();
     void ActualizarPosicion();
     void AplicarGravedad(float deltaTime, sf::Vector2f gravedad,std::vector<Plataforma> plataformas);
+
 };
 class FabricaPersonaje{
 public:

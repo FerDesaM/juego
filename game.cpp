@@ -5,8 +5,8 @@
 #include<memory>
 Juego::Juego(int ancho, int largo, const std::string& titulo) {
     int fps = 60;
-    gravity = sf::Vector2f(-5.f, 9.8f); // Gravedad (puedes ajustarla según tus necesidades)
-    ventana = new sf::RenderWindow(sf::VideoMode(ancho, largo), titulo);
+    gravity = sf::Vector2f(0.f, 9.8f); // Gravedad (puedes ajustarla según tus necesidades)
+    ventana= make_unique<sf::RenderWindow>(sf::VideoMode(ancho,largo),titulo);
     ventana->setFramerateLimit(fps);
 
     limiteMundo=sf::Vector2f(ancho*4,largo*2);
@@ -18,6 +18,7 @@ Juego::Juego(int ancho, int largo, const std::string& titulo) {
 }
 
 void Juego::GameLoop() {
+
     juegoRealInicializado = false;
     menu= make_unique<Menu>(*ventana);
     game= make_unique<RealGame>(*ventana);
@@ -27,6 +28,7 @@ void Juego::GameLoop() {
     sf::View camaraView;
     //camaraView.setSize(sf::Vector2f(ventana->getSize().x, ventana->getSize().y));
     ventana->setView(camaraView);
+    sonido->play();
     while (ventana->isOpen())
     {
         if(estadoJuego==EstadoJuego::Menu){
@@ -42,6 +44,8 @@ void Juego::GameLoop() {
         } }}
         else if(estadoJuego==EstadoJuego::RealGame){
 
+                personaje1->AplicarGravedad(deltaTime, gravity, plataformas);
+                prota1->AplicarGravedad(deltaTime, gravity, plataformas);
             Evento();
             moverCamara();
             Dibujar();
@@ -81,15 +85,16 @@ void Juego::Dibujar() {
     // projectile->draw(*ventana);
     ventana->draw(*mapa);
     ventana->draw(*sprite1);
-    ventana->draw(cuadrado->getShape());
-    ventana->draw(cuadrado2->getShape());
+
+    //Dibujar Personaje
+    personaje1->Draw(*ventana,deltaTime,gravity,plataformas);
+    prota1->Draw(*ventana, deltaTime, gravity,plataformas);
     //Dibujar Plataformas
     for (auto& plataforma : plataformas) {
         plataforma.Draw(*ventana);
     }
-    //Dibujar Personaje
-    personaje1->Draw(*ventana,deltaTime,gravity,plataformas);
-    //prota1->Draw(*ventana, deltaTime, gravity,plataformas);
+    ventana->draw(cuadrado->getShape());
+    ventana->draw(cuadrado2->getShape());
     //proy.Draw(window);
 
     ventana->display();
@@ -121,7 +126,7 @@ void Juego::Colisiones()
 void Juego::crear_jugadores()
 {
     fabrica = std::make_unique<Prota>();
-    sf::Vector2f posicion(500.f,600.f);
+    sf::Vector2f posicion(400.f,200.f);
     sf::Color color=sf::Color::Blue;
     prota1.reset(fabrica->crearPersonaje(posicion,color));
     prota1->RefreshAnimacion();
@@ -141,8 +146,6 @@ void Juego::Cargar_recursos()
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
     //sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
-
-
     //Cargar Plataformas
     Plataforma plata(sf::Vector2f(500.f, 500.f), 900.f, 200.f);
     plataformas.push_back(plata);
@@ -151,6 +154,11 @@ void Juego::Cargar_recursos()
     personaje1->AplicarGravedad(deltaTime,gravity,plataformas);
     personaje1->RefreshAnimacion();
     crear_jugadores();
+    buffer = std::make_unique<sf::SoundBuffer>();
+    buffer->loadFromFile("../images/big+space.ogg");
+    sonido = std::make_unique<sf::Sound>();
+    sonido->setBuffer(*buffer);
+    sonido->setVolume(80.f);
     mapa->setTexture(*texture2);
     mapa->setScale(1000.f/mapa->getTexture()->getSize().x,800.f/mapa->getTexture()->getSize().y);
 }

@@ -16,10 +16,13 @@ private:
     sf::Vector2i frame_actual;
     sf::Clock clock;
     float frameTime = 0.1f; // Tiempo entre cada frame de la animación (ajústalo según tu necesidad)
-
+    bool realcontacto;
 public:
+    ExplosionProyectil() = default;
     ExplosionProyectil(sf::Vector2f position, float tamanio); //Constructor de plataforma
     void Draw(sf::RenderWindow& window);
+    void setContact(bool contacto);
+    void updatePosition(const sf::Vector2f& newPosition);
 };
 
 

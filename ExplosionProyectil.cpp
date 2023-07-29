@@ -30,17 +30,32 @@ ExplosionProyectil::ExplosionProyectil(sf::Vector2f position, float tamanio):pos
     //Colocar sprite en posicion inicial
     sprite->setPosition(position);
 }
-
+void ExplosionProyectil::updatePosition(const sf::Vector2f& newPosition) {
+    position = newPosition;
+    sprite->setPosition(position);
+}
+void ExplosionProyectil::setContact(bool contacto){
+    realcontacto=contacto;
+}
 void ExplosionProyectil::Draw(sf::RenderWindow& window){
-    clock.restart();
-    if (clock.getElapsedTime().asSeconds() >= frameTime) {
-        //Actualizar frame
-        sf::IntRect rectangulo(frame_actual.x * (sprite->getTexture()->getSize().x / divisionsprite.x),
-                               frame_actual.y * (sprite->getTexture()->getSize().y / divisionsprite.y),
-                               sprite->getTexture()->getSize().x / divisionsprite.x,
-                               sprite->getTexture()->getSize().y / divisionsprite.y);
-        sprite->setTextureRect(rectangulo);
-        clock.restart();
+    if (realcontacto) {
+        if (clock.getElapsedTime().asSeconds() >= frameTime) {
+            // Actualizar frame
+            sf::IntRect rectangulo(frame_actual.x * (sprite->getTexture()->getSize().x / divisionsprite.x),
+                                   frame_actual.y * (sprite->getTexture()->getSize().y / divisionsprite.y),
+                                   sprite->getTexture()->getSize().x / divisionsprite.x,
+                                   sprite->getTexture()->getSize().y / divisionsprite.y);
+            sprite->setTextureRect(rectangulo);
+            frame_actual.x++; // Avanzar al siguiente frame de la explosión
+
+            if (frame_actual.x >= divisionsprite.x) {
+                // Si se llegó al último frame, se detiene la animación
+                realcontacto = false;
+            }
+
+            clock.restart();
+        }
     }
+
     window.draw(*sprite);
 }
