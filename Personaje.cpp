@@ -11,6 +11,9 @@
 Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color color)
         : position(position), width(width), height(height), movementSpeed(5.f),
         estaSobrePlataforma(false) {
+
+    //Crear Barra de vida
+    barraVida = new CompBarraVida(position,sf::Vector2f(80.f,10.f));
     //Establecer direccion disparo inicial
     vectorDireccionDisparo = sf::Vector2f(1.0,-1.0);
     anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
@@ -86,6 +89,9 @@ void Personaje::Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f ace
 
     //Dibujo de flecha de angulo
     window.draw(*spriteFlecha);
+
+    //Dibujo de barra de vida
+    barraVida->Draw(window);
 }
 
 void Personaje::ResponderEvento(sf::Event event,CompBarraPoder barra){
@@ -185,6 +191,7 @@ void Personaje::moveRight() {
 }
 
 void Personaje::ActualizarPosicion(){
+    barraVida->setPosicion(position);
     sprite1->setPosition(position);
     spriteFlecha->setPosition(position);
     anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
@@ -222,7 +229,8 @@ void Personaje::AplicarGravedad(float deltaTime, sf::Vector2f gravedad,
 
     // Actualizar la posición del sprite del personaje
     sprite1->setPosition(position);
-
+    spriteFlecha->setPosition(position);
+    barraVida->setPosicion(position);
     // Si estaba sobre una plataforma y ahora no lo está, actualizar la animación para que mire hacia abajo
     if (estabaSobrePlataformaPrevio && !estaSobrePlataforma) {
         frame_actual.y = 1;

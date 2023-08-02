@@ -2,50 +2,65 @@
 // Created by EQUIPO on 1/08/2023.
 //
 
-#ifndef JUEGOC___COMPBARRAPODER_H
-#define JUEGOC___COMPBARRAPODER_H
+#ifndef JUEGOC___COMPBARRAVIDA_H
+#define JUEGOC___COMPBARRAVIDA_H
 #include "Componente.h"
 
-class CompBarraPoder{
+class CompBarraVida{
 private:
     sf::RectangleShape rectBarraVida;
     sf::RectangleShape rectBorde;
+    sf::Vector2f posicion;
     float vida; //Va de 0 a 100
     bool seLleno;
 public:
-    ///Constructor de BarraProgreso
-    CompBarraPoder(sf::Vector2f position, sf::Vector2f size, sf::Color fillColor, sf::Color borderColor)
-    : vida(0.0f), seLleno(false)
+///Constructor de BarraProgreso
+    CompBarraVida(sf::Vector2f position, sf::Vector2f size)
+            : posicion(position),vida(100.0f), seLleno(false)
     {
         rectBarraVida.setPosition(position);
         rectBarraVida.setSize(size);
-        rectBarraVida.setFillColor(fillColor);
+        rectBarraVida.setFillColor(sf::Color::Red);
 
         rectBorde.setPosition(position);
         rectBorde.setSize(size);
         rectBorde.setFillColor(sf::Color::Transparent);
-        rectBorde.setOutlineColor(borderColor);
+        rectBorde.setOutlineColor(sf::Color::Black);
         rectBorde.setOutlineThickness(2.0f);
     }
+///Funcion para actualizar Posicion
+    void setPosicion(sf::Vector2f posicion){
+        this->posicion=posicion;
+    }
 
-    ///Funcion geter para obtener el vida
-    float getProgreso(){
+///Funcion geter para obtener el vida
+    float getVida(){
         return this->vida;
     }
-    ///Función para dibujar la barra de vida
+    ///Funcion geter para obtener el vida
+    float disminuirVida(float danio){
+        float nuevaVida = this->vida-danio;
+        this->vida = nuevaVida>0?nuevaVida:0.0f;
+    }
+
+///Función para dibujar la barra de vida
     void Draw(sf::RenderWindow& window){
+        //Vector para desfasar la ubicacion de la barra de vida
+        sf::Vector2f desfase = sf::Vector2f (-39.f,73.f);
+        rectBorde.setPosition(posicion+desfase);
         if (vida > 0)
         {
             sf::RectangleShape progressRect(rectBarraVida);
             //Obtener relacion
             float relacion = vida / 100.0f;
             progressRect.setSize(sf::Vector2f(rectBarraVida.getSize().x * relacion, rectBarraVida.getSize().y));
+            progressRect.setPosition(posicion + desfase);
             window.draw(progressRect);
         }
         window.draw(rectBorde);
     }
 
-    ///Función para responder a eventos
+///Función para responder a eventos
     void ResponderEvento(sf::Event event){
         if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::O) )
         {
@@ -64,5 +79,4 @@ public:
         }
     }
 };
-
-#endif //JUEGOC___COMPBARRAPODER_H
+#endif //JUEGOC___COMPBARRAVIDA_H

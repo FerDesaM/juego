@@ -9,6 +9,7 @@
 #include <vector>
 #include "Plataforma.h"
 #include "components/CompBarraPoder.h"
+#include "components/CompBarraVida.h"
 
 //Utilizar el abstract factory para crear distintos tipos de personajes
 class Personaje {
@@ -26,14 +27,13 @@ private:
     sf::Sprite *sprite1; //Sprite del personaje
     sf::Sprite *spriteFlecha; //Sprite de la flecha apuntadora
     sf::Vector2i divisionsprite; //Division de texturas para sprite
-    sf::RectangleShape rectangle;
     std::vector<Proyectil> proyectiles2;
     sf::Vector2i frame_actual;
+    CompBarraVida* barraVida;
     float deltaTime;
     float tiempoAcumulado;
     sf::Clock frameClock;
-    //Prueba Ciruclo
-    sf::CircleShape *circulo;
+
 public:
     Personaje(sf::Vector2f position, float width, float height, sf::Color color); //Constructor
     void Disparar(std::vector<Proyectil>& projectiles, sf::Vector2f velocidadInicial);

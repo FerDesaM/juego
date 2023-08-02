@@ -99,8 +99,8 @@ void Juego::Dibujar() {
     prota2->Draw(*ventana,deltaTime,gravity,plataformas);
     prota1->Draw(*ventana, deltaTime, gravity,plataformas);
 
-    ventana->draw(cuadrado->getShape());
-    ventana->draw(cuadrado2->getShape());
+    //ventana->draw(cuadrado->getShape());
+    //ventana->draw(cuadrado2->getShape());
     //proy.Draw(window);
 
     ventana->display();
@@ -143,8 +143,8 @@ void Juego::crear_jugadores()
 
 void Juego::Cargar_recursos()
 {
-    cuadrado = std::make_unique<Cuadrado<float>>(sf::Vector2f(200.f, 200.f), sf::Vector2f(50.f, 50.f),Color::Blue);
-    cuadrado2 = std::make_unique<Cuadrado<float>>(sf::Vector2f(0.f, 735.f), sf::Vector2f(1000.f, 50.f),Color::Red);
+    //cuadrado = std::make_unique<Cuadrado<float>>(sf::Vector2f(200.f, 200.f), sf::Vector2f(50.f, 50.f),Color::Blue);
+    //cuadrado2 = std::make_unique<Cuadrado<float>>(sf::Vector2f(0.f, 735.f), sf::Vector2f(1000.f, 50.f),Color::Red);
     texture1= std::make_unique<sf::Texture>();
     texture2= std::make_unique<sf::Texture>();
     sprite1=std::make_unique<sf::Sprite>();
@@ -165,7 +165,7 @@ void Juego::Cargar_recursos()
     personaje1->AplicarGravedad(deltaTime,gravity,plataformas);
     personaje1->RefreshAnimacion();
     //Crear Barra de lanzamiento
-    barraPoder = std::make_unique<CompBarraPoder>(sf::Vector2f(50, 800), sf::Vector2f(800, 40), sf::Color::Green, sf::Color::Black);
+    barraPoder = std::make_unique<CompBarraPoder>(sf::Vector2f(50, 830), sf::Vector2f(800, 40), sf::Color::Green, sf::Color::Black);
     crear_jugadores();
     buffer = std::make_unique<sf::SoundBuffer>();
     buffer->loadFromFile("../images/big+space.ogg");

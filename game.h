@@ -35,8 +35,8 @@ private:
     std::unique_ptr<Sprite> sprite1;
     std::unique_ptr<Texture> texture2;
     std::unique_ptr<Sprite> mapa;
-    std::unique_ptr<Cuadrado<float>> cuadrado;
-    std::unique_ptr<Cuadrado<float>> cuadrado2;
+    //std::unique_ptr<Cuadrado<float>> cuadrado;
+    //std::unique_ptr<Cuadrado<float>> cuadrado2;
     std::unique_ptr<Event> evento;
     sf::Vector2i divisionsprite;
     sf::Vector2f limiteMundo;
