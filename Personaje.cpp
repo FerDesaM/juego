@@ -14,6 +14,7 @@ Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color
     //Establecer direccion disparo inicial
     vectorDireccionDisparo = sf::Vector2f(1.0,-1.0);
     anguloDisparo = VectorUtil::getAngleWithXAxis(vectorDireccionDisparo);
+
     //Establecer texturas y sprites del Personaje
     textura1 = new sf::Texture;
     textura1->loadFromFile("../images/cocodrilo.png");
@@ -30,8 +31,11 @@ Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color
     sprite1->setOrigin(anchoFrame/2,altoFrame/2);
     //Scalar sprite para ajustar al ancho y alto establecidos
     sprite1->scale(width/anchoFrame,height/altoFrame);
+
     //Colocar sprite en posicion inicial
     sprite1->setPosition(position);
+
+
     //Sprite de flecha apuntadora
     texturaFlecha = new sf::Texture;
     texturaFlecha->loadFromFile("../images/canion.png");
@@ -94,34 +98,42 @@ void Personaje::ResponderEvento(sf::Event event,CompBarraPoder barra){
         this->moveLeft();
     else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
         this->moveRight();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+    {
 
+    }
     else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
     {
-        Disparo(barra);
-    }
-}
-void Personaje::ResponderEvento2(sf::Event event,float deltaTime){
-    if (event.key.code == sf::Keyboard::W)
-        this->moveUp();
 
-    else if (event.key.code == sf::Keyboard::S)
-        this->moveDown();
-    else if (event.key.code == sf::Keyboard::A)
-        this->moveLeft();
-    else if (event.key.code == sf::Keyboard::D)
-        this->moveRight();
-    else if (event.key.code == sf::Keyboard::O){
         //Definir Fuerza de lanzamiento
-        float fuerzaLanzamiento = 50.f; //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
+        float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
+        sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
+        this->Disparar(proyectiles2, v0);
+    }
+
+}
+void Personaje::ResponderEvento2(sf::Event event,CompBarraPoder barra){
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W)
+        this->moveUp();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
+        this->moveDown();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A)
+        this->moveLeft();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
+        this->moveRight();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O)
+    {
+
+    }
+    else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::O)
+    {
+        //Definir Fuerza de lanzamiento
+        float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
         sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
         this->Disparar(proyectiles2, v0);
     }
 }
-void Personaje::Disparo(CompBarraPoder barra){
-    float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
-    sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
-    this->Disparar(proyectiles2, v0);
-}
+
 void Personaje::moveUp() {
     float incremento = -1;
     if(frame_actual.y == 1)
@@ -155,6 +167,7 @@ void Personaje::moveLeft() {
     ActualizarPosicion();
     RefreshAnimacion();
 }
+
 void Personaje::moveRight() {
     if (frame_actual.y != 0){
         frame_actual.y = 0;
@@ -224,6 +237,7 @@ Personaje *Prota::crearPersonaje(sf::Vector2f position, const sf::Color &color) 
     personaje1->setTexture(Text);
     return personaje1;
 }
+
 Personaje *Prota2::crearPersonaje(sf::Vector2f position, const sf::Color &color) {
     Text=new sf::Texture;
     Text->loadFromFile("../images/cocodrilo.png");

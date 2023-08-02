@@ -47,7 +47,7 @@ public:
 
     ///Función para responder a eventos
     void ResponderEvento(sf::Event event){
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+        if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::O) )
         {
             if (seLleno) //Si detecta que ya se lleno previamente. reinica el progreso
             {
@@ -58,7 +58,7 @@ public:
                 this->progreso = 100.0f;
             seLleno = false; //Mientras se este apretando la barra espaciadora selleno es falso
         }
-        else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+        else if (event.type == sf::Event::KeyReleased && (event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::O))
         {
             seLleno = true; //Una vez se suelta la barra espaciadora "selleno" es true
         }
