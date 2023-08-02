@@ -88,16 +88,28 @@ void Personaje::Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f ace
     window.draw(*spriteFlecha);
 }
 
-void Personaje::ResponderEvento(sf::Event event,float deltaTime){
-    if (event.key.code == sf::Keyboard::Up)
-        this->moveUp();
+void Personaje::ResponderEvento(sf::Event event,CompBarraPoder barra){
 
-    else if (event.key.code == sf::Keyboard::Down)
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
+        this->moveUp();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
         this->moveDown();
-    else if (event.key.code == sf::Keyboard::Left)
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
         this->moveLeft();
-    else if (event.key.code == sf::Keyboard::Right)
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
         this->moveRight();
+    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+    {
+
+    }
+    else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
+    {
+
+        //Definir Fuerza de lanzamiento
+        float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
+        sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
+        this->Disparar(proyectiles2, v0);
+    }
     else if (event.key.code == sf::Keyboard::Space){
         //Definir Fuerza de lanzamiento
         float fuerzaLanzamiento = 50.f; //Esta es la fuerza de disparo, falta definir un valor maximo y una barra

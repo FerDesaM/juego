@@ -16,7 +16,13 @@
 #include "Proyectil.h"
 #include "ExplosionProyectil.h"
 #include "RealGame.h"
+#include "components/CompPlataforma.h"
+#include "components/CompBarraPoder.h"
 #include "Menu.h"
+
+
+
+
 using namespace std;
 using namespace sf;
 
@@ -42,6 +48,9 @@ private:
     std::unique_ptr<RealGame> game;
     //Plataforma de juego
     std::vector<Plataforma> plataformas;
+    CompPlataforma *plataforma001;
+    //Barra de poder para el disparo
+    std::unique_ptr<CompBarraPoder> barraPoder;
     bool juegoRealInicializado;
     std::vector<std::unique_ptr<Personaje>> personajes;
     std::unique_ptr<sf::Sound> sonido;

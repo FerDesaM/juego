@@ -8,6 +8,7 @@
 #include "Proyectil.h"
 #include <vector>
 #include "Plataforma.h"
+#include "components/CompBarraPoder.h"
 
 //Utilizar el abstract factory para crear distintos tipos de personajes
 class Personaje {
@@ -46,7 +47,7 @@ public:
     void setTexture(sf::Texture * texture);
     sf::Vector2f getPosition() const;
     //Movimiento Personaje
-    void ResponderEvento(sf::Event event,float deltaTime);
+    void ResponderEvento(sf::Event event,CompBarraPoder barra);
     void moveUp();
     void moveDown();
     void moveLeft();

@@ -19,8 +19,8 @@ void RealGame::Evento()
                 exit(1);
                 break;
             case Event::KeyPressed:
-                personaje1->ResponderEvento(*evento,deltaTime);
-                prota1->ResponderEvento(*evento,deltaTime);//Responder evento de Personaje1
+                //personaje1->ResponderEvento(*evento);
+                //prota1->ResponderEvento(*evento);//Responder evento de Personaje1
                 break;
         }
 
