@@ -13,11 +13,8 @@ ExplosionProyectil::ExplosionProyectil(sf::Vector2f position, float tamanio):pos
     divisionsprite.y=2;
     frame_actual.x=0;
     frame_actual.y=0;
-
-
     sprite = new sf::Sprite;
     sprite->setTexture(*textura);
-
     //Calcular ancho y alto de la imagen
     float anchoFrame = textura->getSize().x/ divisionsprite.x;
     float altoFrame = textura->getSize().y/ divisionsprite.y;

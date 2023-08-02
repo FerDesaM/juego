@@ -49,10 +49,13 @@ public:
     void moveDown();
     void moveLeft();
     void moveRight();
-    void ActualizarPosicion();
     void Disparo(CompBarraPoder barra);
+    void ActualizarPosicion();
     void AplicarGravedad(float deltaTime, sf::Vector2f gravedad,std::vector<Plataforma> plataformas);
-
+    sf::FloatRect getGlobalBounds() const {
+        return sprite1->getGlobalBounds();
+    }
+    void ColisionConProyectil(std::vector<Proyectil>& proyectiles);
 };
 class FabricaPersonaje{
 public:

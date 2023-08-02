@@ -20,9 +20,6 @@
 #include "components/CompBarraPoder.h"
 #include "Menu.h"
 
-
-
-
 using namespace std;
 using namespace sf;
 
@@ -58,6 +55,7 @@ private:
     std::vector<std::unique_ptr<Personaje>> personajes;
     std::unique_ptr<sf::Sound> sonido;
     std::unique_ptr<sf::SoundBuffer> buffer;
+    std::vector<Proyectil> proyectiles;
     //Aceleracion de gravedad
     sf::Vector2f gravity; // Gravedad (puedes ajustarla según tus necesidades)
     const float deltaTime = 10.f / 60.f; // Delta de tiempo para cálculos de movimiento (60 FPS)
@@ -75,6 +73,4 @@ public:
     };
     EstadoJuego estadoJuego;
 };
-
-
 #endif //JUEGOC___GAME_H

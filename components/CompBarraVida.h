@@ -38,9 +38,9 @@ public:
         return this->vida;
     }
     ///Funcion geter para obtener el vida
-    float disminuirVida(float danio){
-        float nuevaVida = this->vida-danio;
-        this->vida = nuevaVida>0?nuevaVida:0.0f;
+    void disminuirVida(float danio) {
+        float nuevaVida = this->vida - danio;
+        this->vida = nuevaVida > 0 ? nuevaVida : 0.0f;
     }
 
 ///Función para dibujar la barra de vida

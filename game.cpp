@@ -55,9 +55,11 @@ void Juego::GameLoop() {
             juegoRealInicializado = true;
         } }}
         else if(estadoJuego==EstadoJuego::RealGame){
-
+            prota1->ColisionConProyectil(proyectiles);
+            prota2->ColisionConProyectil(proyectiles);
                 prota2->AplicarGravedad(deltaTime, gravity, plataformas);
                 prota1->AplicarGravedad(deltaTime, gravity, plataformas);
+
             Evento();
             moverCamara();
             Dibujar();
@@ -94,7 +96,6 @@ void Juego::moverCamara() {
 void Juego::Dibujar() {
     ventana->clear(sf::Color::Blue);
 
-    // projectile->draw(*ventana);
     ventana->draw(*mapa);
     ventana->draw(*sprite1);
 
@@ -109,10 +110,6 @@ void Juego::Dibujar() {
     //Dibujar Personaje
     prota2->Draw(*ventana,deltaTime,gravity,plataformas);
     prota1->Draw(*ventana, deltaTime, gravity,plataformas);
-
-    //ventana->draw(cuadrado->getShape());
-    //ventana->draw(cuadrado2->getShape());
-    //proy.Draw(window);
 
     ventana->display();
 }
@@ -141,7 +138,7 @@ void Juego::crear_jugadores()
     prota1.reset(fabrica->crearPersonaje(posicion,color));
     prota1->RefreshAnimacion();
     fabrica2 = std::make_unique<Prota2>();
-    sf::Vector2f posicion2(400.f,200.f);
+    sf::Vector2f posicion2(100.f,200.f);
     sf::Color color2=sf::Color::Blue;
     prota2.reset(fabrica2->crearPersonaje(posicion2,color2));
     prota2->RefreshAnimacion();
@@ -149,28 +146,25 @@ void Juego::crear_jugadores()
 
 void Juego::Cargar_recursos()
 {
-    //cuadrado = std::make_unique<Cuadrado<float>>(sf::Vector2f(200.f, 200.f), sf::Vector2f(50.f, 50.f),Color::Blue);
-    //cuadrado2 = std::make_unique<Cuadrado<float>>(sf::Vector2f(0.f, 735.f), sf::Vector2f(1000.f, 50.f),Color::Red);
     texture1= std::make_unique<sf::Texture>();
     texture2= std::make_unique<sf::Texture>();
     sprite1=std::make_unique<sf::Sprite>();
     mapa=std::make_unique<sf::Sprite>();
-
     texture2->loadFromFile("../images/mapa.jpg");
     sprite1->setTexture(*texture1);
     sprite1->setPosition(300,220);
-    //sprite1->setScale(450.f/sprite1->getTexture()->getSize().x,450.f/sprite1->getTexture()->getSize().y);
-
-    plataforma001= new CompPlataforma(sf::Vector2f(0.f, 0.f),200.f,50.f,"../images/Plt1.png",1,1);
 
     //Cargar Plataformas
-    Plataforma plata(sf::Vector2f(500.f, 500.f), 900.f, 100.f);
-    plataformas.push_back(plata);
+    Plataforma plata1(sf::Vector2f(100.f, 500.f), 400.f, 200.f);
+    plataformas.push_back(plata1);
+    Plataforma plata2(sf::Vector2f(800.f, 500.f), 400.f, 200.f);
+    plataformas.push_back(plata2);
+    Plataforma plata3(sf::Vector2f(450.f, 700.f), 500.f, 200.f);
+    plataformas.push_back(plata3);
     //Crear personaje 1//////////////////////////////
     personaje1 = std::make_unique<Personaje>(sf::Vector2f(0.f, 300.f), 300.f, 300.f, sf::Color::Red);
     personaje1->AplicarGravedad(deltaTime,gravity,plataformas);
     personaje1->RefreshAnimacion();
-
     //Crear Barra de lanzamiento
     barraPoder = std::make_unique<CompBarraPoder>(sf::Vector2f(50, 830), sf::Vector2f(800, 40), sf::Color::Green, sf::Color::Black);
     crear_jugadores();

@@ -11,7 +11,6 @@
 Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color color)
         : position(position), width(width), height(height), movementSpeed(5.f),
         estaSobrePlataforma(false) {
-
     //Crear Barra de vida
     barraVida = new CompBarraVida(position,sf::Vector2f(80.f,10.f));
     //Establecer direccion disparo inicial
@@ -37,8 +36,6 @@ Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color
 
     //Colocar sprite en posicion inicial
     sprite1->setPosition(position);
-
-
     //Sprite de flecha apuntadora
     texturaFlecha = new sf::Texture;
     texturaFlecha->loadFromFile("../images/canion.png");
@@ -109,11 +106,8 @@ void Personaje::ResponderEvento(sf::Event event,CompBarraPoder barra){
     }
     else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space)
     {
-
         //Definir Fuerza de lanzamiento
-        float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
-        sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
-        this->Disparar(proyectiles2, v0);
+        Disparo(barra);
     }
 
 }
@@ -133,9 +127,7 @@ void Personaje::ResponderEvento2(sf::Event event,CompBarraPoder barra){
     else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::O)
     {
         //Definir Fuerza de lanzamiento
-        float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
-        sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
-        this->Disparar(proyectiles2, v0);
+        Disparo(barra);
     }
 }
 
@@ -188,7 +180,12 @@ void Personaje::moveRight() {
     ActualizarPosicion();
     RefreshAnimacion();
 }
+void Personaje::Disparo(CompBarraPoder barra){
+    float fuerzaLanzamiento = barra.getProgreso(); //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
+    sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
+    this->Disparar(proyectiles2, v0);
 
+}
 void Personaje::ActualizarPosicion(){
     barraVida->setPosicion(position);
     sprite1->setPosition(position);
@@ -225,7 +222,6 @@ void Personaje::AplicarGravedad(float deltaTime, sf::Vector2f gravedad,
         // Colocar al personaje encima de la plataforma
         position.y = personajePosition.y - height / 2;
     }
-
     // Actualizar la posición del sprite del personaje
     sprite1->setPosition(position);
     spriteFlecha->setPosition(position);
@@ -236,7 +232,20 @@ void Personaje::AplicarGravedad(float deltaTime, sf::Vector2f gravedad,
         RefreshAnimacion();
     }
 }
-
+void Personaje::ColisionConProyectil(std::vector<Proyectil>& proyectiles) {
+    // Iterar por todos los proyectiles y verificar si hay colisión con el personaje
+    for (auto& proyectil : proyectiles) {
+        if (!proyectil.estaExplotado2() && proyectil.colisionaConPersonaje(*this)) {
+            // Si el proyectil no ha explotado y colisiona con el personaje
+            float danioProyectil = 10.0f; // Define aquí el daño del proyectil
+            barraVida->disminuirVida(danioProyectil); // Disminuir la vida del personaje por el daño del proyectil
+            // Aquí podrías realizar acciones adicionales cuando el personaje recibe daño por un proyectil
+            // Eliminar el proyectil que impactó al personaje
+            proyectil.setEliminar(true);
+            std::cout<<"no se obtiene el bound";
+        }
+    }
+}
 Personaje *Prota::crearPersonaje(sf::Vector2f position, const sf::Color &color) {
     Text=new sf::Texture;
     Text->loadFromFile("../images/gatopsicopata.png");

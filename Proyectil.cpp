@@ -3,7 +3,7 @@
 //
 
 #include "Proyectil.h"
-
+#include "Personaje.h"
 Proyectil::Proyectil(sf::Vector2f posicionIncial, sf::Vector2f velocidadInicial):
         posicion(posicionIncial),tiempoExplosion(2.0f),velocidad(velocidadInicial),estaExplotado(false),
         explosion(posicionIncial, 100.f){
@@ -59,12 +59,10 @@ sf::Vector2f Proyectil::getPosition() const {
     if (estaExplotado) {
         tiempoExplosion -= deltaTime;
     }
-
     // Si no ha explotado, actualiza la posición del sprite del proyectil
     if (!estaExplotado) {
         sprite1->setPosition(posicion); // Aplica la posición al sprite
     }
-
     // Calcula el ángulo de la velocidad
     float angle = std::atan2(velocidad.y, velocidad.x);
     // Convierte el ángulo de radianes a grados
@@ -78,4 +76,18 @@ void Proyectil::Draw(sf::RenderWindow& window) {
     else {
         explosion.Draw(window);
     }
+}
+bool Proyectil::colisionaConPersonaje(Personaje& personaje) {
+    // Obtener el rectángulo delimitador del proyectil
+    sf::FloatRect contornoProyectil = sprite1->getGlobalBounds();
+
+    // Obtener el rectángulo delimitador del personaje
+    sf::FloatRect contornoPersonaje = personaje.getGlobalBounds();
+
+    // Verificar si los rectángulos se superponen
+    if (contornoProyectil.intersects(contornoPersonaje)) {
+        // Aquí puedes aplicar acciones adicionales, como aplicar daño al personaje
+        return true; // Hubo colisión con el personaje
+    }
+    return false; // No hubo colisión con el personaje
 }
