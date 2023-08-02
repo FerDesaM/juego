@@ -31,7 +31,7 @@ Personaje::Personaje(sf::Vector2f position, float width, float height, sf::Color
     float anchoFrame = textura1->getSize().x / divisionsprite.x;
     float altoFrame = textura1->getSize().y / divisionsprite.y;
     //Redefinir centro de coordenads del personaje
-    sprite1->setOrigin(anchoFrame/2,altoFrame/2);
+    sprite1->setOrigin(anchoFrame/2,2*altoFrame/4);
     //Scalar sprite para ajustar al ancho y alto establecidos
     sprite1->scale(width/anchoFrame,height/altoFrame);
 
@@ -83,12 +83,11 @@ void Personaje::Draw(sf::RenderWindow& window, float deltaTime, sf::Vector2f ace
         bala.AplicarAceleracion(deltaTime,aceleracion,plataformas);
         bala.Draw(window);
     }
+    //Dibujo de flecha de angulo
+    window.draw(*spriteFlecha);
 
     //Dibujo del Sprite del personaje
     window.draw(*sprite1);
-
-    //Dibujo de flecha de angulo
-    window.draw(*spriteFlecha);
 
     //Dibujo de barra de vida
     barraVida->Draw(window);

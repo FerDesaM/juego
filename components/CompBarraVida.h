@@ -46,7 +46,7 @@ public:
 ///Función para dibujar la barra de vida
     void Draw(sf::RenderWindow& window){
         //Vector para desfasar la ubicacion de la barra de vida
-        sf::Vector2f desfase = sf::Vector2f (-39.f,73.f);
+        sf::Vector2f desfase = sf::Vector2f (-39.f,80.f);
         rectBorde.setPosition(posicion+desfase);
         if (vida > 0)
         {

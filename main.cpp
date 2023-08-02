@@ -9,8 +9,9 @@ const int y=800;
 const int x=1000;
 int main(int argc , char * args[])
 {
-
+    Juego* partida = Juego::getInstance(x, y, "Prueba");
+    /*
     Juego *partida;
-    partida=new Juego(x, y, "Prueba");
+    partida=new Juego(x, y, "Prueba");*/
     return 0;
 }

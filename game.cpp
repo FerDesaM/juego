@@ -18,6 +18,17 @@ Juego::Juego(int ancho, int largo, const std::string& titulo) {
     GameLoop();
 }
 
+Juego::Juego() {}
+
+Juego *Juego::getInstance(int ancho, int largo, const std::string& titulo) {
+    if (instance == nullptr) {
+        instance = new Juego(ancho,largo,titulo);
+    }
+    return instance;
+}
+
+Juego* Juego::instance = nullptr;
+
 void Juego::GameLoop() {
 
     juegoRealInicializado = false;
@@ -121,12 +132,7 @@ void Juego::Evento()
         }
     }
 }
-void Juego::Colisiones()
-{
 
-
-
-}
 void Juego::crear_jugadores()
 {
     fabrica = std::make_unique<Prota>();
@@ -158,12 +164,13 @@ void Juego::Cargar_recursos()
     plataforma001= new CompPlataforma(sf::Vector2f(0.f, 0.f),200.f,50.f,"../images/Plt1.png",1,1);
 
     //Cargar Plataformas
-    Plataforma plata(sf::Vector2f(500.f, 500.f), 900.f, 200.f);
+    Plataforma plata(sf::Vector2f(500.f, 500.f), 900.f, 100.f);
     plataformas.push_back(plata);
     //Crear personaje 1//////////////////////////////
     personaje1 = std::make_unique<Personaje>(sf::Vector2f(0.f, 300.f), 300.f, 300.f, sf::Color::Red);
     personaje1->AplicarGravedad(deltaTime,gravity,plataformas);
     personaje1->RefreshAnimacion();
+
     //Crear Barra de lanzamiento
     barraPoder = std::make_unique<CompBarraPoder>(sf::Vector2f(50, 830), sf::Vector2f(800, 40), sf::Color::Green, sf::Color::Black);
     crear_jugadores();

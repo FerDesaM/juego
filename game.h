@@ -28,6 +28,9 @@ using namespace sf;
 
 class Juego {
 private:
+    static Juego* instance;
+    Juego(int ancho, int largo, const std::string& titulo);
+    Juego();
     //Se hace uso del puntero unico para la liberacion de memoria
     std::unique_ptr<sf::RenderWindow> ventana;
     std::unique_ptr<Projectile> projectile;
@@ -35,8 +38,6 @@ private:
     std::unique_ptr<Sprite> sprite1;
     std::unique_ptr<Texture> texture2;
     std::unique_ptr<Sprite> mapa;
-    //std::unique_ptr<Cuadrado<float>> cuadrado;
-    //std::unique_ptr<Cuadrado<float>> cuadrado2;
     std::unique_ptr<Event> evento;
     sf::Vector2i divisionsprite;
     sf::Vector2f limiteMundo;
@@ -61,11 +62,10 @@ private:
     sf::Vector2f gravity; // Gravedad (puedes ajustarla según tus necesidades)
     const float deltaTime = 10.f / 60.f; // Delta de tiempo para cálculos de movimiento (60 FPS)
 public:
-    Juego(int ancho, int largo, const std::string& titulo);
+    static Juego* getInstance(int ancho, int largo, const std::string& titulo);
     void Dibujar();
     void GameLoop();
     void Evento();
-    void Colisiones();
     void Cargar_recursos();
     void crear_jugadores();
     void moverCamara();
