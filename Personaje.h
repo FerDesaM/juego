@@ -48,6 +48,7 @@ public:
     sf::Vector2f getPosition() const;
     //Movimiento Personaje
     void ResponderEvento(sf::Event event,CompBarraPoder barra);
+    void ResponderEvento2(sf::Event event,float deltaTime);
     void moveUp();
     void moveDown();
     void moveLeft();

@@ -116,7 +116,7 @@ void Juego::Evento()
         }
         else{
             personaje1->ResponderEvento(*evento,* barraPoder);
-            prota1->ResponderEvento(*evento,*barraPoder);//Responder evento de Personaje1
+            prota1->ResponderEvento2(*evento,deltaTime);//Responder evento de Personaje1
             barraPoder->ResponderEvento(*evento);//Responder evento de Barra de poder de disparo
         }
     }

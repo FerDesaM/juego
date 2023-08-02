@@ -117,6 +117,23 @@ void Personaje::ResponderEvento(sf::Event event,CompBarraPoder barra){
         this->Disparar(proyectiles2, v0);
     }
 }
+void Personaje::ResponderEvento2(sf::Event event,float deltaTime){
+    if (event.key.code == sf::Keyboard::W)
+        this->moveUp();
+
+    else if (event.key.code == sf::Keyboard::S)
+        this->moveDown();
+    else if (event.key.code == sf::Keyboard::A)
+        this->moveLeft();
+    else if (event.key.code == sf::Keyboard::D)
+        this->moveRight();
+    else if (event.key.code == sf::Keyboard::O){
+        //Definir Fuerza de lanzamiento
+        float fuerzaLanzamiento = 50.f; //Esta es la fuerza de disparo, falta definir un valor maximo y una barra
+        sf::Vector2f v0 = fuerzaLanzamiento*vectorDireccionDisparo; // Velocidad inicial del proyectil ( se supone que el vector direccion debe estar normalizado)
+        this->Disparar(proyectiles2, v0);
+    }
+}
 
 void Personaje::moveUp() {
     float incremento = -1;
