@@ -41,9 +41,11 @@ private:
     sf::Vector2i divisionsprite;
     sf::Vector2f limiteMundo;
     std::unique_ptr<FabricaPersonaje> fabrica;
+    std::unique_ptr<FabricaPersonaje> fabrica2;
     //Personaje de juego
     std::unique_ptr<Personaje> personaje1;
     std::unique_ptr<Personaje> prota1;
+    std::unique_ptr<Personaje> prota2;
     std::unique_ptr<Menu> menu;
     std::unique_ptr<RealGame> game;
     //Plataforma de juego

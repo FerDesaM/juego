@@ -45,7 +45,7 @@ void Juego::GameLoop() {
         } }}
         else if(estadoJuego==EstadoJuego::RealGame){
 
-                personaje1->AplicarGravedad(deltaTime, gravity, plataformas);
+                prota2->AplicarGravedad(deltaTime, gravity, plataformas);
                 prota1->AplicarGravedad(deltaTime, gravity, plataformas);
             Evento();
             moverCamara();
@@ -96,7 +96,7 @@ void Juego::Dibujar() {
     barraPoder->Draw(*ventana);
 
     //Dibujar Personaje
-    personaje1->Draw(*ventana,deltaTime,gravity,plataformas);
+    prota2->Draw(*ventana,deltaTime,gravity,plataformas);
     prota1->Draw(*ventana, deltaTime, gravity,plataformas);
 
     ventana->draw(cuadrado->getShape());
@@ -115,7 +115,7 @@ void Juego::Evento()
             break;
         }
         else{
-            personaje1->ResponderEvento(*evento,* barraPoder);
+            prota2->ResponderEvento(*evento,* barraPoder);
             prota1->ResponderEvento2(*evento,deltaTime);//Responder evento de Personaje1
             barraPoder->ResponderEvento(*evento);//Responder evento de Barra de poder de disparo
         }
@@ -134,7 +134,11 @@ void Juego::crear_jugadores()
     sf::Color color=sf::Color::Blue;
     prota1.reset(fabrica->crearPersonaje(posicion,color));
     prota1->RefreshAnimacion();
-
+    fabrica2 = std::make_unique<Prota2>();
+    sf::Vector2f posicion2(400.f,200.f);
+    sf::Color color2=sf::Color::Blue;
+    prota2.reset(fabrica2->crearPersonaje(posicion2,color2));
+    prota2->RefreshAnimacion();
 }
 
 void Juego::Cargar_recursos()
